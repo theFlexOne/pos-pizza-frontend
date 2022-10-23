@@ -1,0 +1,6 @@
+.keyboard [class^="row-"] {
+  display: flex;
+  grid-row: span 1;
+  place-content: center;
+  gap: 0.5rem;
+}

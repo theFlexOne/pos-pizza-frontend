@@ -18,6 +18,16 @@
 .env.test.local
 .env.production.local
 
+# pkg manager debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# vsnotes
+*_.txt
+*_.md
+
+# dev files
+/dev
+/.vscode

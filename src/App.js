@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import useFetchApp from "./hooks/useFetchApp";
+import { Route, Routes } from "react-router-dom";
+import { Box } from "@mui/material";
+import NewOrder from "./pages/NewOrder/NewOrder";
+import Layout from "./components/Layout";
+import Customers from "./pages/Customers/Customers";
+import Settings from "./pages/Settings/Settings";
+import useDragScroll from "./hooks/useDragScroll";
+import { OrderProvider } from "./context/OrderContext";
+import Login from "./pages/Login/Login";
 
+const root = document.getElementById("root");
 function App() {
+  const [err, isLoading] = useFetchApp();
+  const isSS = sessionStorage.length > 0;
+  const dragScrollEvents = useDragScroll();
+
+  if (isLoading) return <h2>Loading...</h2>;
+  if (err && !isLoading) {
+    console.error(err);
+    return <h2>{err.message}</h2>;
+  }
+
+  const NewOrderProvider = () => (
+    <OrderProvider>
+      <NewOrder />
+    </OrderProvider>
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    isSS &&
+    !isLoading && (
+      <Layout>
+        <Box {...dragScrollEvents}>
+          <Routes>
+            <Route path="/" element={<NewOrderProvider />} />
+            <Route path="/NewOrder" element={<NewOrderProvider />} />
+            <Route path="/Customers" element={<Customers />} />
+            <Route path="/Settings" element={<Settings />} />
+            <Route path="/Login" element={<Login />} />
+          </Routes>
+        </Box>
+      </Layout>
+    )
   );
 }
 
