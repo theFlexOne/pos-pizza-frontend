@@ -2,9 +2,14 @@ import "./keyboardKey.css";
 
 import React from "react";
 
-const KeyboardKey = ({ char, onClick, size, form, type = "button" }) => {
+const KeyboardKey = ({ char, onClick, form, type = "button" }) => {
   return (
-    <button form={form} type={type} className={`key ${size}`} onClick={onClick}>
+    <button
+      form={form}
+      type={type}
+      className={`key ${char.size}`}
+      onClick={onClick}
+    >
       {char.label}
     </button>
   );

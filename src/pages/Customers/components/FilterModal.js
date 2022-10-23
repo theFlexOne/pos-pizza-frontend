@@ -1,43 +1,43 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 import {
   Button,
   ButtonGroup,
   Dialog,
   DialogContent,
   TextField,
-} from '@mui/material';
-import Keyboard from '../../../lib/Keyboard/Keyboard';
-import { Box } from '@mui/system';
-import { useTheme } from '@emotion/react';
+} from "@mui/material";
+import Keyboard from "../../../lib/Keyboard/Keyboard";
+import { Box } from "@mui/system";
+import { useTheme } from "@emotion/react";
 
 const styles = {
   dialog: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '80%',
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "80%",
     p: 0,
   },
   container: {
-    backgroundColor: '#353536',
-    flexBasis: '100%',
-    display: 'flex',
-    justifyContent: 'center',
+    backgroundColor: "#353536",
+    flexBasis: "100%",
+    display: "flex",
+    justifyContent: "center",
   },
   form: {
-    flexGrow: '1',
-    bgcolor: 'rgba(255, 255, 255, 0.25)',
-    display: 'flex',
-    alignItems: 'center',
-    m: '2rem',
-    p: '0 5rem',
+    flexGrow: "1",
+    bgcolor: "rgba(255, 255, 255, 0.25)",
+    display: "flex",
+    alignItems: "center",
+    m: "2rem",
+    p: "0 5rem",
   },
   textFieldBox: {
-    mr: '5rem',
-    flex: '1',
+    mr: "5rem",
+    flex: "1",
   },
   textField: {
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-    borderRadius: '4px',
+    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    borderRadius: "4px",
   },
 };
 
@@ -57,13 +57,13 @@ export default function FilterModal({
 
   const options = {
     nextBtn: {
-      label: 'search',
+      label: "search",
       action: handleFilter,
     },
     prevBtn: {
-      label: 'cancel',
+      label: "cancel",
       action: () => {
-        setFilter({ text: '', type: 'name' });
+        setFilter({ text: "", type: "name" });
         setIsOpen(false);
       },
     },
@@ -75,8 +75,8 @@ export default function FilterModal({
     return (
       <Button
         variant="contained"
-        onClick={e => setFilter({ ...filter, type: e.target.textContent })}
-        sx={{ ...active, minHeight: '3.5rem', flexBasis: '100%' }}
+        onClick={(e) => setFilter({ ...filter, type: e.target.textContent })}
+        sx={{ ...active, minHeight: "3.5rem", flexBasis: "100%" }}
         disabled={disabled}
       >
         {label}
@@ -95,7 +95,7 @@ export default function FilterModal({
               <TextField
                 label={`Filter customers by ${filterType}:`}
                 value={inputText}
-                onChange={e => setFilter({ ...filter, text: e.target.value })}
+                onChange={(e) => setFilter({ ...filter, text: e.target.value })}
                 onClick={handleClick}
                 sx={styles.textField}
                 inputProps={{ autoFocus: true }}
@@ -103,7 +103,7 @@ export default function FilterModal({
                 inputRef={inputRef}
               />
             </Box>
-            <ButtonGroup sx={{ flexBasis: '40%' }}>
+            <ButtonGroup sx={{ flexBasis: "40%" }}>
               <FilterButton label="name" />
               <FilterButton label="tel" />
               <FilterButton label="address" />

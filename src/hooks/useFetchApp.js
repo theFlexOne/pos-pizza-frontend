@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const POS_DATA_URL = 'http://localhost:8000';
+const POS_DATA_URL = "http://localhost:8888";
 
-const populateSessionStorage = data => {
+const populateSessionStorage = (data) => {
   const appSections = Object.keys(data);
-  appSections.forEach(section => {
+  appSections.forEach((section) => {
     sessionStorage.setItem(section, JSON.stringify(data[section]));
   });
 };
@@ -16,9 +16,9 @@ const useFetchApp = () => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    console.log('Loading...');
+    console.log("Loading...");
     try {
-      const res = await fetch(POS_DATA_URL + '/db');
+      const res = await fetch(POS_DATA_URL + "/db");
       if (!res.ok) {
         console.error(res.message);
         return null;
@@ -26,7 +26,7 @@ const useFetchApp = () => {
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error('Error:' + err.message, err);
+      console.error("Error:" + err.message, err);
       setError(err);
     } finally {
       setIsLoading(false);

@@ -8,6 +8,7 @@ import Settings from "./pages/Settings/Settings";
 import useDragScroll from "./hooks/useDragScroll";
 import { OrderProvider } from "./context/OrderContext";
 import Login from "./pages/Login/Login";
+import Test from "./Test";
 
 const root = document.getElementById("root");
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<NewOrderProvider />} />
             <Route path="/NewOrder" element={<NewOrderProvider />} />
+            <Route path="/test" element={<Test />} />
             <Route path="/Customers" element={<Customers />} />
             <Route path="/Settings" element={<Settings />} />
             <Route path="/Login" element={<Login />} />

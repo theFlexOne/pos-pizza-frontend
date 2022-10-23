@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./keyboard.css";
 import KeyboardRow from "./component/KeyboardRow/KeyboardRow";
 
-const keyboardData = {
+const initialConfig = {
   lowercase: [
     ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "bksp"],
     ["a", "s", "d", "f", "g", "h", "j", "k", "l", "enter"],
@@ -17,16 +17,17 @@ const keyboardData = {
   ],
 };
 
-const Keyboard = ({ onInput, input }) => {
-  const [isLowercase, setIsLowercase] = useState(true);
-  const keys = keyboardData[isLowercase ? "lowercase" : "uppercase"];
+const Keyboard = ({ onKeyTap, input, form, config = initialConfig }) => {
+  // const [isLowercase, setIsLowercase] = useState(true);
+  const keys = initialConfig.lowercase;
   return (
     <div className="keyboard">
       {keys.map((row, i) => (
         <KeyboardRow
-          setIsLowercase={setIsLowercase}
+          form={form}
+          setIsLowercase={() => {}}
           input={input}
-          onClick={onInput}
+          onClick={onKeyTap}
           chars={row}
           key={i}
           className={`row-${i + 1}`}

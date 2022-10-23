@@ -1,41 +1,36 @@
 import "./keyboardRow.css";
 import keyboardLegend from "../../keyboardLegend";
 import KeyboardKey from "../KeyboardKey/KeyboardKey";
+import EnterKey from "../KeyboardKey/components/EnterKey/EnterKey";
+import CharacterKey from "../KeyboardKey/components/CharacterKey/CharacterKey";
 
-const KeyboardRow = ({ chars, onClick, input, className, setIsLowercase }) => {
+const KeyboardRow = ({
+  chars,
+  onClick,
+  input,
+  className,
+  setIsLowercase,
+  form,
+}) => {
   const toggleShift = () => setIsLowercase((c) => !c);
   return (
     <div className={className}>
       {chars.map((char) => {
-        char = keyboardLegend[char];
+        {
+          /* char = keyboardLegend[char]; */
+        }
         if (Object.values(char)[0] === "enter") {
-          return (
-            <KeyboardKey
-              size={char.size}
-              type="submit"
-              form="fullName"
-              key={Object.values(char)[0]}
-              char={char}
-            />
-          );
+          return <EnterKey form={form} key={char} />;
         }
         if (Object.values(char)[0] === "shift") {
-          return (
-            <KeyboardKey
-              size={char.size}
-              key={Object.values(char)[0]}
-              onClick={toggleShift}
-              char={char}
-            />
-          );
+          return <KeyboardKey key={char} onClick={toggleShift} char={char} />;
         }
         return (
-          <KeyboardKey
-            size={char.size}
-            key={Object.values(char)[0]}
+          <CharacterKey
+            key={char}
             input={input}
-            onClick={() => onClick(char.value(input))}
-            char={char}
+            onClick={onClick}
+            charKey={char}
           />
         );
       })}
