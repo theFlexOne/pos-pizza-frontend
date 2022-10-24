@@ -17,6 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+/.env
 
 # pkg manager debug logs
 npm-debug.log*
