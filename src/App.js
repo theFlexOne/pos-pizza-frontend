@@ -10,7 +10,6 @@ import { OrderProvider } from "./context/OrderContext";
 import Login from "./pages/Login/Login";
 import Test from "./Test";
 
-const root = document.getElementById("root");
 function App() {
   const [err, isLoading] = useFetchApp();
   const isSS = sessionStorage.length > 0;

@@ -1,32 +1,32 @@
 import { useState, useEffect } from "react";
-
-const POS_DATA_URL = "http://localhost:8888";
+import constants from "../constants/constants";
 
 const populateSessionStorage = (data) => {
-  const appSections = Object.keys(data);
-  appSections.forEach((section) => {
+  console.log("data", data);
+  Object.keys(data).forEach((section) => {
     sessionStorage.setItem(section, JSON.stringify(data[section]));
   });
 };
 
 const useFetchApp = () => {
-  const [results, setResult] = useState(null);
+  const [results, setResults] = useState(null);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (collection = "recipes") => {
     setIsLoading(true);
-    console.log("Loading...");
+    const ssData = JSON.parse(sessionStorage.getItem(collection));
+    if (ssData) {
+      setResults(ssData);
+      setIsLoading(false);
+      return;
+    }
     try {
-      const res = await fetch(POS_DATA_URL + "/db");
-      if (!res.ok) {
-        console.error(res.message);
-        return null;
-      }
-      const data = await res.json();
-      setResult(data);
+      const res = await fetch(constants.APP_DATA_URL + "/recipes");
+      if (!res.ok) throw new Error(res.statusText);
+      const recipes = Object.fromEntries([await res.json()]);
+      setResults(recipes);
     } catch (err) {
-      console.error("Error:" + err.message, err);
       setError(err);
     } finally {
       setIsLoading(false);
@@ -34,9 +34,11 @@ const useFetchApp = () => {
   };
 
   useEffect(() => {
+    sessionStorage.clear();
     fetchData();
   }, []);
 
+  results && console.log("results", results);
   results && populateSessionStorage(results);
   return [error, isLoading];
 };

@@ -6,39 +6,40 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
-import Box from '@mui/system/Box';
-import React, { useState, useEffect } from 'react';
-import { useTheme } from '@emotion/react';
-import { DateTime as dt } from 'luxon';
-import CustomerTableRow from './components/CustomerTableRow';
-import FilterModal from './components/FilterModal';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { getFromSS } from '../../utils/sessionStorageHelpers';
-import { deleteCustomer } from '../../utils/fetchHelpers';
-import { formatForDisplay } from '../../utils/formatPhoneNumber';
-import useStyles from '../../hooks/useStyles';
+} from "@mui/material";
+import Box from "@mui/system/Box";
+import React, { useState, useEffect } from "react";
+import { DateTime as dt } from "luxon";
+import CustomerTableRow from "./components/CustomerTableRow";
+import FilterModal from "./components/FilterModal";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import { deleteCustomer } from "../../utils/fetchHelpers";
+import { formatForDisplay } from "../../utils/formatPhoneNumber";
+import useStyles from "../../hooks/useStyles";
+import constants from "../../constants/constants";
 
 const ROWS_PER_PAGE = 8;
-const INITIAL_FILTER = { text: '', type: 'name' };
+const INITIAL_FILTER = { text: "", type: "name" };
 
-const toDateTimeFormat = ms => dt.fromMillis(ms).toFormat('D T');
+const toDateTimeFormat = (ms) => dt.fromMillis(ms).toFormat("D T");
 
 const buildRows = (customers, page) => {
-  return customers
-    .slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE)
-    .map(({ name, phoneNumber: phone, address, id, recentOrders }) => {
-      const fullName = name.firstName + ' ' + name.lastName;
-      const fullAddress =
-        address.streetAddress + ', ' + address.secondaryAddress;
-      const orderedLast = recentOrders?.[0]
-        ? toDateTimeFormat(recentOrders[0].timeStamp)
-        : 'n/a';
+  const pageCustomers = customers.slice(
+    page * ROWS_PER_PAGE,
+    page * ROWS_PER_PAGE + ROWS_PER_PAGE
+  );
+  const formattedCustomers = pageCustomers.map(
+    ({ name, phone, address, id }) => {
+      const fullName = name.first + " " + name.last;
+      const fullAddress = address.street + ", " + address.secondary;
+      const orderedLast = "n/a";
       const phoneNumber = formatForDisplay(phone);
 
       return { fullName, phoneNumber, fullAddress, id, orderedLast };
-    });
+    }
+  );
+  return formattedCustomers;
 };
 
 export default function Customers(props) {
@@ -62,32 +63,34 @@ export default function Customers(props) {
 
   const resetFilter = () => setFilter(INITIAL_FILTER);
 
-  const handleDeleteCustomer = id => {
+  const handleDeleteCustomer = (id) => {
     deleteCustomer(id);
-    const newCustomerList = customerList.filter(customer => id !== customer.id);
+    const newCustomerList = customerList.filter(
+      (customer) => id !== customer.id
+    );
     setCustomerList(newCustomerList);
     setIsOpen(false);
   };
 
   const getCustomersToDisplay = () => {
-    const filterCallback = customer => {
+    const filterCallback = (customer) => {
       let data;
       const { firstName, lastName } = customer.name;
       switch (filter.type) {
-        case 'name':
-          data = firstName + ' ' + lastName;
+        case "name":
+          data = firstName + " " + lastName;
           break;
-        case 'tel':
+        case "tel":
           data = customer.phoneNumber;
           break;
-        case 'address':
+        case "address":
           data =
             customer.address.streetAddress +
-            ', ' +
+            ", " +
             customer.address.secondaryAddress;
           break;
         default:
-          data = firstName + ' ' + lastName;
+          data = firstName + " " + lastName;
           break;
       }
       return data.toLowerCase().includes(filter.text.toLowerCase());
@@ -102,9 +105,22 @@ export default function Customers(props) {
   const rows = buildRows(sortedCustomersByName, page);
 
   useEffect(() => {
-    const customers = getFromSS('customers');
-    setCustomerList(customers);
+    const ssData = sessionStorage.getItem("customers");
+    if (ssData !== null) return setCustomerList(JSON.parse(ssData));
+    fetch(constants.APP_DATA_URL + "/customers")
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        sessionStorage.setItem("customers", JSON.stringify(data));
+        setCustomerList(data);
+      })
+      .catch(console.error);
   }, []);
+
+  console.log("customerList", customerList);
 
   return (
     <>
@@ -118,7 +134,7 @@ export default function Customers(props) {
                     sx={styles.cell}
                     onClick={() => setIsDescending(() => !isDescending)}
                   >
-                    {'Name'}
+                    {"Name"}
                     {isDescending ? (
                       <ArrowDownwardIcon sx={styles.arrowDown} />
                     ) : (
@@ -133,7 +149,7 @@ export default function Customers(props) {
               </TableHead>
               <TableBody sx={styles.body}>
                 {rows &&
-                  rows.map(row => (
+                  rows.map((row) => (
                     <CustomerTableRow
                       customer={row}
                       key={row.id}
@@ -154,7 +170,7 @@ export default function Customers(props) {
             )}
             <Button
               variant="contained"
-              sx={{ ml: 'auto' }}
+              sx={{ ml: "auto" }}
               disabled={page === 0}
               onClick={handlePrevPage}
             >

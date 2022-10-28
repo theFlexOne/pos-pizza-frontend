@@ -1,5 +1,5 @@
-const testNumber = '5556440596';
-const testFormat = 'XXX-XXX-XXXX';
+const testNumber = "5556440596";
+const testFormat = "XXX-XXX-XXXX";
 const testBlocks = [3, 3, 4];
 
 const splitIntoBlocks = (rawValue = testNumber, blocks = testBlocks) => {
@@ -15,8 +15,8 @@ const splitIntoBlocks = (rawValue = testNumber, blocks = testBlocks) => {
   return { digitBlocks, extra };
 };
 
-const generateOptionsFromString = stringFormat => {
-  const blocks = stringFormat.matchAll(/X+/g).map(block => block.length);
+const generateOptionsFromString = (stringFormat) => {
+  const blocks = stringFormat.matchAll(/X+/g).map((block) => block.length);
   const delimiters = stringFormat.match(/[^X]+/g);
   return { blocks, delimiters };
 };
@@ -34,8 +34,10 @@ const formatPhoneNumber = (number = testNumber, format = testFormat) => {
   // console.log(`matches: `, matches);
 };
 
-const formatForDisplay = phone => {
-  return `${phone.slice(0, 3)}-${phone.slice(3, 6)}-${phone.slice(6, 10)}`;
+const formatForDisplay = (phone) => {
+  const onlyNumbers = phone.split(/\D+/).join("");
+  if (onlyNumbers.length !== 10) return phone;
+  return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6, 10)}`;
 };
 
 export { formatPhoneNumber, splitIntoBlocks, formatForDisplay };
