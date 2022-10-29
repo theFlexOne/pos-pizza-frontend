@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "server": "json-server -w ./data/db.json -p 8888",
+    "server": "json-server -w ./data/db.json -p 9999",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

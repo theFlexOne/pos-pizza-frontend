@@ -1,13 +1,13 @@
 .keyboard {
-  /* position: absolute;
-  top: 50%;
+  /* position: absolute; */
+  /* top: 50%;
   left: 0;
   bottom: 0;
   right: 0; */
-  flex-basis: 100%;
   background-color: rgba(25, 25, 79, 0.75);
   display: grid;
   gap: 0.5rem;
-  grid-auto-rows: 1fr;
+  grid-template-rows: repeat(4, 1fr);
   padding: 1rem;
+  flex-basis: 100%;
 }

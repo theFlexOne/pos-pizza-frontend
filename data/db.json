@@ -413,22 +413,6 @@
     },
     {
       "name": {
-        "firstName": "Anderson",
-        "lastName": "Effertz"
-      },
-      "phoneNumber": "555-937-3629",
-      "address": {
-        "streetAddress": "84837 Morar Lodge",
-        "secondaryAddress": "Suite 075",
-        "city": "Gravel Falls",
-        "state": "Minnesota"
-      },
-      "recentOrders": [],
-      "id": "47f44551",
-      "created": 1631140837335
-    },
-    {
-      "name": {
         "firstName": "Arianna",
         "lastName": "Wunsch"
       },
@@ -669,22 +653,6 @@
     },
     {
       "name": {
-        "firstName": "Everardo",
-        "lastName": "Corwin"
-      },
-      "phoneNumber": "555-157-0497",
-      "address": {
-        "streetAddress": "504 Bosco Viaduct",
-        "secondaryAddress": "Suite 044",
-        "city": "Gravel Falls",
-        "state": "Minnesota"
-      },
-      "recentOrders": [],
-      "id": "a15c3a69",
-      "created": 1603172372117
-    },
-    {
-      "name": {
         "firstName": "Mavis",
         "lastName": "Kovacek"
       },
@@ -858,22 +826,6 @@
       "recentOrders": [],
       "id": "bb10d624",
       "created": 1622366341885
-    },
-    {
-      "name": {
-        "firstName": "Dayne",
-        "lastName": "Bayer"
-      },
-      "phoneNumber": "555-713-7351",
-      "address": {
-        "streetAddress": "16483 Roberts Camp",
-        "secondaryAddress": "Suite 601",
-        "city": "Gravel Falls",
-        "state": "Minnesota"
-      },
-      "recentOrders": [],
-      "id": "2bc5e7b5",
-      "created": 1604832536590
     },
     {
       "name": {

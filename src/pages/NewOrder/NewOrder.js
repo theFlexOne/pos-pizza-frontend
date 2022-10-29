@@ -6,12 +6,12 @@ import { CustomerProvider } from "../../context/CustomerContext";
 import { useOrder } from "../../context/OrderContext";
 
 export default function NewOrder() {
-  const [isMenu, setIsMenu] = useState(false);
+  const [isMenu, setIsMenu] = useState(true);
   const order = useOrder();
 
-  useEffect(() => {
-    order.customer && setIsMenu(true);
-  }, [order]);
+  // useEffect(() => {
+  //   order.customer && setIsMenu(true);
+  // }, [order]);
 
   return isMenu ? (
     <Menu goToCustomer={() => setIsMenu(false)} />

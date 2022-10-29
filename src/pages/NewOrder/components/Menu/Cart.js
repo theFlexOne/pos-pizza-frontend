@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { useTheme } from '@emotion/react';
-import CartItem from './CartItem';
-import { toMoneyString } from '../../../../utils/textMods';
-import { useOrder } from '../../../../context/OrderContext';
-import useStyles from '../../../../hooks/useStyles';
+import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { useTheme } from "@emotion/react";
+import CartItem from "./CartItem";
+import { toMoneyString } from "../../../../utils/textMods";
+import { useOrder } from "../../../../context/OrderContext";
+import useStyles from "../../../../hooks/useStyles";
 
 const SALES_TAX = 0.07;
 
@@ -31,7 +31,11 @@ const CartTotal = ({ subtotal }) => {
   };
 
   return (
-    <Box display="flex" marginTop="auto" bTop="2px solid rgba(0, 0, 0, 0.5)">
+    <Box
+      display="flex"
+      marginTop="auto"
+      borderTop="2px solid rgba(0, 0, 0, 0.5)"
+    >
       <CartTotalCell label="subtotal">{subtotal}</CartTotalCell>
       <CartTotalCell label="tax">{subtotal * SALES_TAX}</CartTotalCell>
       <CartTotalCell label="total">{subtotal * (1 + SALES_TAX)}</CartTotalCell>
@@ -71,7 +75,7 @@ export default function Cart(props) {
         <Button
           type="submit"
           variant="contained"
-          sx={{ flexGrow: '1' }}
+          sx={{ flexGrow: "1" }}
           fullWidth
         >
           CHECKOUT

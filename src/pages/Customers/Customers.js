@@ -20,7 +20,7 @@ import useStyles from "../../hooks/useStyles";
 import constants from "../../constants/constants";
 
 const ROWS_PER_PAGE = 8;
-const INITIAL_FILTER = { text: "", type: "name" };
+const INITIAL_FILTER = { value: "", type: undefined };
 
 const toDateTimeFormat = (ms) => dt.fromMillis(ms).toFormat("D T");
 
@@ -29,17 +29,7 @@ const buildRows = (customers, page) => {
     page * ROWS_PER_PAGE,
     page * ROWS_PER_PAGE + ROWS_PER_PAGE
   );
-  const formattedCustomers = pageCustomers.map(
-    ({ name, phone, address, id }) => {
-      const fullName = name.first + " " + name.last;
-      const fullAddress = address.street + ", " + address.secondary;
-      const orderedLast = "n/a";
-      const phoneNumber = formatForDisplay(phone);
-
-      return { fullName, phoneNumber, fullAddress, id, orderedLast };
-    }
-  );
-  return formattedCustomers;
+  return pageCustomers;
 };
 
 export default function Customers(props) {
@@ -49,14 +39,18 @@ export default function Customers(props) {
   const [isDescending, setIsDescending] = useState(false);
   const [customerList, setCustomerList] = useState([]);
 
+  console.log("page", page);
+
   const styles = useStyles().customers;
 
   const isLastPage = page >= Math.ceil(customerList.length / ROWS_PER_PAGE - 1);
 
-  const handleNextPage = () => setPage(() => page + 1);
-  const handlePrevPage = () => setPage(() => page - 1);
+  const handleNextPage = () => setPage((prev) => prev + 1);
+  const handlePrevPage = () => setPage((prev) => prev - 1);
 
-  const handleFilter = () => {
+  const filterCustomers = (value, type) => {
+    const filter = value ? { value, type } : INITIAL_FILTER;
+    setFilter(filter);
     setPage(0);
     setIsOpen(false);
   };
@@ -73,29 +67,46 @@ export default function Customers(props) {
   };
 
   const getCustomersToDisplay = () => {
-    const filterCallback = (customer) => {
-      let data;
-      const { firstName, lastName } = customer.name;
-      switch (filter.type) {
-        case "name":
-          data = firstName + " " + lastName;
-          break;
-        case "tel":
-          data = customer.phoneNumber;
-          break;
-        case "address":
-          data =
-            customer.address.streetAddress +
-            ", " +
-            customer.address.secondaryAddress;
-          break;
-        default:
-          data = firstName + " " + lastName;
-          break;
-      }
-      return data.toLowerCase().includes(filter.text.toLowerCase());
-    };
-    return customerList.filter(filterCallback);
+    if (!filter.type) return customerList;
+    if (filter.type === "name")
+      return customerList.filter((cust) => {
+        const fullName = Object.values(cust.name).join(" ");
+        return fullName.includes(filter.value);
+      });
+    if (filter.type === "phone")
+      return customerList.filter((cust) => {
+        const phone = cust.phoneNumber.replace("-", "");
+        return phone.includes(filter.value);
+      });
+    if (filter.type === "address")
+      return customerList.filter((cust) => {
+        const { streetAddress, secondaryAddress } = cust.address;
+        const address = `${streetAddress}, ${secondaryAddress}`;
+        return address.includes(filter.value);
+      });
+    // const filterCallback = (customer) => {
+    //   let data;
+    //   const { firstName, lastName } = customer.name;
+    //   switch (filter.type) {
+    //     case "name":
+    //       data = firstName + " " + lastName;
+    //       break;
+    //     case "tel":
+    //       data = customer.phoneNumber;
+    //       break;
+    //     case "address":
+    //       data =
+    //         customer.address.streetAddress +
+    //         ", " +
+    //         customer.address.secondaryAddress;
+    //       break;
+    //     default:
+    //       data = firstName + " " + lastName;
+    //       break;
+    //   }
+    //   return data.toLowerCase().includes(filter.text.toLowerCase());
+    // };
+    // return customerList.filter(filterCallback);
   };
   const sortedCustomersByName = getCustomersToDisplay().sort((a, b) => {
     if (a.name.lastName > b.name.lastName === isDescending) return -1;
@@ -105,22 +116,19 @@ export default function Customers(props) {
   const rows = buildRows(sortedCustomersByName, page);
 
   useEffect(() => {
-    const ssData = sessionStorage.getItem("customers");
-    if (ssData !== null) return setCustomerList(JSON.parse(ssData));
+    const ssData = JSON.parse(sessionStorage.getItem("customers"));
+    if (ssData !== null) return setCustomerList(ssData);
     fetch(constants.APP_DATA_URL + "/customers")
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         sessionStorage.setItem("customers", JSON.stringify(data));
         setCustomerList(data);
       })
       .catch(console.error);
   }, []);
-
-  console.log("customerList", customerList);
 
   return (
     <>
@@ -191,7 +199,7 @@ export default function Customers(props) {
         setFilter={setFilter}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        handleFilter={handleFilter}
+        handleFilter={filterCustomers}
       />
     </>
   );

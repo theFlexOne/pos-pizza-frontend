@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useLayoutEffect } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import blueGrey from '@mui/material/colors/blueGrey';
-import orange from '@mui/material/colors/orange';
-import { useRef } from 'react';
-import { useState } from 'react';
-import ConfirmationModal from '../components/ConfirmationModal';
+import React, { createContext, useContext, useLayoutEffect } from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import blueGrey from "@mui/material/colors/blueGrey";
+import orange from "@mui/material/colors/orange";
+import { useRef } from "react";
+import { useState } from "react";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const LayoutContext = createContext();
 
@@ -27,14 +27,14 @@ const LayoutProvider = ({ children }) => {
     onClose: handleModalClose,
     onCancel: handleModalClose,
     onConfirm: handleConfirm,
-    title: 'Modal',
+    title: "Modal",
   };
 
   const contextValue = undefined;
 
   useLayoutEffect(() => {
+    // I don't remember why this is here. Should've been way more explicit
     !doc.fullscreenElement && setIsModalOpen(true);
-    console.log(`documentRef: `, doc);
   }, [doc.fullscreenElement]);
 
   return (

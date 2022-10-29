@@ -9,8 +9,6 @@ const KeyboardKey = ({ char, onClick, form, type = "button" }) => {
       type={type}
       className={`key ${char.size}`}
       onClick={onClick}
-      tabIndex="-1"
-      data-char={char.value}
     >
       {char.label}
     </button>

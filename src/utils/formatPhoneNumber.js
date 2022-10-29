@@ -35,6 +35,7 @@ const formatPhoneNumber = (number = testNumber, format = testFormat) => {
 };
 
 const formatForDisplay = (phone) => {
+  console.log("phone", phone);
   const onlyNumbers = phone.split(/\D+/).join("");
   if (onlyNumbers.length !== 10) return phone;
   return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6, 10)}`;

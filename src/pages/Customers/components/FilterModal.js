@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Button,
   ButtonGroup,
@@ -41,41 +41,38 @@ const styles = {
   },
 };
 
-export default function FilterModal({
-  isOpen,
-  setIsOpen,
-  filter,
-  setFilter,
-  handleFilter,
-}) {
+export default function FilterModal({ isOpen, setIsOpen, handleFilter }) {
   const inputRef = useRef();
-  const inputText = filter.text;
-  const filterType = filter.type;
+
+  const [inputValue, setInputValue] = useState("");
+  const [filterType, setFilterType] = useState("name");
+
   const {
     palette: { primary },
   } = useTheme();
 
-  const options = {
-    nextBtn: {
-      label: "search",
-      action: handleFilter,
-    },
-    prevBtn: {
-      label: "cancel",
-      action: () => {
-        setFilter({ text: "", type: "name" });
-        setIsOpen(false);
-      },
-    },
-  };
+  // const options = {
+  //   nextBtn: {
+  //     label: "search",
+  //     action: handleFilter,
+  //   },
+  //   prevBtn: {
+  //     label: "cancel",
+  //     action: () => {
+  //       setFilter({ text: "", type: "name" });
+  //       setIsOpen(false);
+  //     },
+  //   },
+  // };
 
   const FilterButton = ({ label, disabled }) => {
     const active = label === filterType ? { bgcolor: primary[800] } : {};
 
     return (
       <Button
+        data-filter-value={label}
         variant="contained"
-        onClick={(e) => setFilter({ ...filter, type: e.target.textContent })}
+        onClick={(e) => setFilterType(e.target.dataset.filterType)}
         sx={{ ...active, minHeight: "3.5rem", flexBasis: "100%" }}
         disabled={disabled}
       >
@@ -86,16 +83,27 @@ export default function FilterModal({
 
   const handleClick = () => inputRef.current.focus();
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleFilter(inputValue, filterType);
+  };
+
   return (
     <Dialog fullScreen open={isOpen} onClose={() => setIsOpen(false)}>
       <DialogContent sx={styles.dialog}>
         <Box sx={styles.container}>
           <Box sx={styles.form}>
-            <Box sx={styles.textFieldBox}>
+            <Box
+              sx={styles.textFieldBox}
+              component="form"
+              id="filterForm"
+              onSubmit={handleSubmit}
+            >
               <TextField
+                id="filterInput"
                 label={`Filter customers by ${filterType}:`}
-                value={inputText}
-                onChange={(e) => setFilter({ ...filter, text: e.target.value })}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 onClick={handleClick}
                 sx={styles.textField}
                 inputProps={{ autoFocus: true }}
@@ -105,14 +113,17 @@ export default function FilterModal({
             </Box>
             <ButtonGroup sx={{ flexBasis: "40%" }}>
               <FilterButton label="name" />
-              <FilterButton label="tel" />
+              <FilterButton label="phone" />
               <FilterButton label="address" />
             </ButtonGroup>
           </Box>
         </Box>
         <Keyboard
-          sx={{ flexGrow: 1 }}
-          options={options}
+          activeInputId="filterInput"
+          formData={inputValue}
+          setFormData={setInputValue}
+          form="filterForm"
+
           // next={filterSubmitBtn}
           // prev={cancelBtn}
         />
