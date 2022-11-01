@@ -4,22 +4,22 @@ import React, {
   useReducer,
   useRef,
   useState,
-} from 'react';
-import { addCustomerToSS, getFromSS } from '../utils/sessionStorageHelpers';
-import { useOrder } from './OrderContext';
-import { v4 as uuid } from 'uuid';
-import { postNewCustomer } from '../utils/fetchHelpers';
+} from "react";
+import { addCustomerToSS, getFromSS } from "../utils/sessionStorageHelpers";
+import { useOrder } from "./OrderContext";
+import { v4 as uuid } from "uuid";
+import { postNewCustomer } from "../utils/fetchHelpers";
 
-const DEFAULT_ACTION = { type: 'error', value: undefined, name: '' };
+const DEFAULT_ACTION = { type: "error", value: undefined, name: "" };
 
 const CustomerContext = createContext();
 
 const initialState = {
-  phoneNumber: '555',
-  firstName: '',
-  lastName: '',
-  streetAddress: '',
-  secondaryAddress: '',
+  phoneNumber: "555",
+  firstName: "",
+  lastName: "",
+  streetAddress: "",
+  secondaryAddress: "",
 };
 
 const buildCustomer = ({
@@ -38,18 +38,18 @@ const buildCustomer = ({
     address: {
       streetAddress,
       secondaryAddress,
-      city: 'Gravel Falls',
-      state: 'Minnesota',
+      city: "Gravel Falls",
+      state: "Minnesota",
     },
     orderHistory: [],
-    id: uuid().split('-')[0],
+    id: uuid().split("-")[0],
     created: Date.now(),
   };
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'update-field': {
+    case "update-field": {
       const { name, value } = action;
       if (!name || value === undefined)
         throw new Error(
@@ -59,23 +59,18 @@ const reducer = (state, action) => {
       console.log(`state: `, newState);
       return newState;
     }
-    case 'clear-field': {
+    case "clear-field": {
       const { name } = action;
-      const newState = { ...state, [name]: '' };
+      const newState = { ...state, [name]: "" };
       return newState;
     }
-    case 'reset': {
+    case "reset": {
       return initialState;
     }
-
-    case 'TEST':
-      console.log('TESTING');
-      return state;
-
     default:
-      console.log('NOT A VALID TYPE: ', action.type);
-      console.log('state: ', state);
-      console.log('action: ', action);
+      console.log("NOT A VALID TYPE: ", action.type);
+      console.log("state: ", state);
+      console.log("action: ", action);
       return state;
   }
 };
@@ -88,12 +83,12 @@ const CustomerProvider = ({ children }) => {
 
   const actions = {
     logThis() {
-      console.log('this: ', this);
+      console.log("this: ", this);
     },
     handleInputChange(element) {
-      const value = element.rawValue || element.value || '';
+      const value = element.rawValue || element.value || "";
       const action = {
-        type: 'update-field',
+        type: "update-field",
         value,
         name: element.name,
       };
@@ -104,8 +99,8 @@ const CustomerProvider = ({ children }) => {
     },
     handleClearInput(name) {
       const action = {
-        type: 'update-field',
-        value: '',
+        type: "update-field",
+        value: "",
         name,
       };
       dispatch(action);
@@ -126,7 +121,7 @@ const CustomerProvider = ({ children }) => {
       return formStep;
     },
     lookupCustomer() {
-      const customerList = getFromSS('customers');
+      const customerList = getFromSS("customers");
       const customer = customerList.find(
         ({ phoneNumber }) => phoneNumber === state.phoneNumber
       );
@@ -144,7 +139,7 @@ const CustomerProvider = ({ children }) => {
       focusedInput.current = undefined;
     },
     test() {
-      const action = { ...DEFAULT_ACTION, type: 'TEST' };
+      const action = { ...DEFAULT_ACTION, type: "TEST" };
       dispatch(action);
     },
   };
@@ -183,7 +178,7 @@ const CustomerProvider = ({ children }) => {
 
 const useCustomer = () => {
   const context = useContext(CustomerContext);
-  if (!context) throw new Error('NOT INSIDE THE CONTEXT PROVIDER');
+  if (!context) throw new Error("NOT INSIDE THE CONTEXT PROVIDER");
   return context;
 };
 
