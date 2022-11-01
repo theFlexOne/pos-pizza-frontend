@@ -1,4 +1,3 @@
-import useFetchApp from "./hooks/useFetchApp";
 import { Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import NewOrder from "./pages/NewOrder/NewOrder";
@@ -9,9 +8,10 @@ import useDragScroll from "./hooks/useDragScroll";
 import { OrderProvider } from "./context/OrderContext";
 import Login from "./pages/Login/Login";
 import Test from "./Test";
+import useApp from "./hooks/useApp";
 
 function App() {
-  const [err, isLoading] = useFetchApp();
+  const [err, isLoading] = useApp();
   const isSS = sessionStorage.length > 0;
   const dragScrollEvents = useDragScroll();
 
