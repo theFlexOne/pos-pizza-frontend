@@ -31,12 +31,17 @@ const CustomerTextField = forwardRef(
       return handleInputChange(target);
     };
 
+    const handleInputClick = () => {
+      setFocusedInput(ref);
+    };
+
     return (
       <TextField
         name={name || ""}
         label={label || ""}
         value={value}
         onChange={handleChange}
+        onClick={(e) => e.target.focus()}
         InputProps={isPhoneNumber ? cleaveInputProps : undefined}
         inputProps={{ autoFocus }}
         fullWidth
