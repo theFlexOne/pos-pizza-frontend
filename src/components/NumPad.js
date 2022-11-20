@@ -1,51 +1,59 @@
-import { Box, Button } from '@mui/material';
-import React from 'react';
-import useStyles from '../hooks/useStyles';
-import { useCustomer } from '../context/CustomerContext';
+import { Box } from "@mui/material";
+const phoneSetup = [
+  ["1", "2", "3"],
+  ["4", "5", "6"],
+  ["7", "8", "9"],
+  ["C", "0", "￩"],
+];
 
-function NumPad(props) {
-  const styles = useStyles().numPad;
-
-  const handleKeyboardClick = e => console.dir(e);
-
-  const NumKey = ({ children }) => {
+const NumPad = ({ setInput, setup = phoneSetup }) => {
+  const NumPadRow = ({ children, ...otherProps }) => {
     return (
-      <Button
-        onClick={handleKeyboardClick}
-        sx={styles.button}
-        variant="contained"
-        color="secondary"
+      <Box
+        className="row"
+        sx={{ flexBasis: "0%", display: "flex", gap: ".5rem" }}
+        {...otherProps}
       >
         {children}
-      </Button>
+      </Box>
     );
   };
+
+  const NumPadKey = ({ children, keyChar, ...otherProps }) => {
+    const onClick = () => {
+      console.log("children", children);
+      if (children === "C") return setInput("");
+      if (children === "￩") return setInput((prev) => prev.slice(0, -1));
+      setInput((prev) => prev + children);
+    };
+    return (
+      <Box
+        className="key"
+        sx={{ p: ".5rem" }}
+        onClick={onClick}
+        {...otherProps}
+      >
+        {children}
+      </Box>
+    );
+  };
+
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.row}>
-        <NumKey>1</NumKey>
-        <NumKey>2</NumKey>
-        <NumKey>3</NumKey>
-      </Box>
-      <Box>
-        <NumKey>4</NumKey>
-        <NumKey>5</NumKey>
-        <NumKey>6</NumKey>
-      </Box>
-      <Box>
-        <NumKey>7</NumKey>
-        <NumKey>8</NumKey>
-        <NumKey>9</NumKey>
-      </Box>
-      <Box>
-        <NumKey>CLEAR</NumKey>
-        <NumKey>0</NumKey>
-        <NumKey>
-          <span className="material-icons-outlined">backspace</span>
-        </NumKey>
-      </Box>
+    <Box
+      className="num-pad-wrapper"
+      sx={{ display: "flex", flexDirection: "column", gap: ".5rem" }}
+    >
+      {setup.map((row, i) => (
+        <NumPadRow key={i + 1}>
+          {row.map((key) => (
+            <NumPadKey key={key} keyChar={key}>
+              {key}
+            </NumPadKey>
+          ))}
+        </NumPadRow>
+      ))}
     </Box>
   );
-}
+};
 
 export default NumPad;

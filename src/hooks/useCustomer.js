@@ -1,16 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
-import { addCustomerToSS, getFromSS } from "../utils/sessionStorageHelpers";
-import { useOrder } from "./OrderContext";
+import { useReducer, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { useOrder } from "../context/OrderContext";
 import { postNewCustomer } from "../utils/fetchHelpers";
-
-const CustomerContext = createContext();
+import { addCustomerToSS, getFromSS } from "../utils/sessionStorageHelpers";
 
 const DEFAULT_ACTION = { type: "error", value: undefined, name: "" };
 
@@ -75,7 +67,7 @@ const reducer = (state, action) => {
   }
 };
 
-const CustomerProvider = ({ children }) => {
+const useCustomer = () => {
   const [formStep, setFormStep] = useState(1);
   const [state, dispatch] = useReducer(reducer, initialState);
   const { selectCustomer } = useOrder();
@@ -143,43 +135,7 @@ const CustomerProvider = ({ children }) => {
       dispatch(action);
     },
   };
-
-  const customerContext = {
-    state,
-    actions,
-    more: {
-      fullName() {
-        const { firstName, lastName } = state;
-        const fullName = `${firstName} ${lastName}`;
-        return fullName;
-      },
-      fullAddress() {
-        const { streetAddress, secondaryAddress } = state;
-        const fullAddress = `${streetAddress}, ${secondaryAddress}`;
-        return fullAddress;
-      },
-      phoneNumber() {
-        const { phoneNumber } = state;
-        const formattedPhoneNumber = `${phoneNumber.slice(
-          0,
-          3
-        )}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
-        return formattedPhoneNumber;
-      },
-    },
-  };
-
-  return (
-    <CustomerContext.Provider value={customerContext}>
-      {children}
-    </CustomerContext.Provider>
-  );
+  return actions;
 };
 
-const useCustomer = () => {
-  const context = useContext(CustomerContext);
-  if (!context) throw new Error("NOT INSIDE THE CONTEXT PROVIDER");
-  return context;
-};
-
-export { useCustomer, CustomerProvider };
+export default useCustomer;

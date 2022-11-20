@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import constants from "../constants/constants";
 
+const initialDataRoutes = ["menu", "customers"];
+
 const populateSessionStorage = (data) => {
   console.log("data", data);
   Object.keys(data).forEach((section) => {
@@ -8,31 +10,18 @@ const populateSessionStorage = (data) => {
   });
 };
 
-const useApp = () => {
+const useApp = async (setData) => {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchJSONServerData = (section = "menu") => {
+  const fetchJSONServerData = async (...sections) => {
     setIsLoading(true);
-    const ssData = sessionStorage.getItem(section);
-    if (ssData) {
-      setResults(ssData);
-      setIsLoading(false);
-      return;
-    }
-    const url = `${constants.APP_DATA_URL}/${section}`;
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data", data);
-        sessionStorage.setItem(section, JSON.stringify(data));
-        setResults(data);
-      })
-      .catch(setError)
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const fetches = sections.map((section) => {
+      const url = `${constants.APP_DATA_URL}/${section}`;
+      return fetch(url).then((res) => res.json());
+    });
+    Promise.all(fetches).then(setData);
   };
 
   const fetchMongoDBData = async (collection = "recipes") => {
@@ -57,13 +46,12 @@ const useApp = () => {
 
   useEffect(() => {
     sessionStorage.clear();
-    // fetchJSONServerData();
-    fetchJSONServerData();
-  }, []);
+    fetchJSONServerData(...initialDataRoutes).then(setData);
+  }, [setData]);
 
   results && console.log("results", results);
   results && populateSessionStorage(results);
-  return [error, isLoading];
+  return [results, error, isLoading];
 };
 
 export default useApp;

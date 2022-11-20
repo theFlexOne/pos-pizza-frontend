@@ -9,17 +9,25 @@ import { OrderProvider } from "./context/OrderContext";
 import Login from "./pages/Login/Login";
 import Test from "./Test";
 import useApp from "./hooks/useApp";
+import { useCallback, useState } from "react";
 
 function App() {
-  const [err, isLoading] = useApp();
+  const [data, setData] = useState(null);
   const isSS = sessionStorage.length > 0;
   const dragScrollEvents = useDragScroll();
 
-  if (isLoading) return <h2>Loading...</h2>;
-  if (err && !isLoading) {
-    console.error(err);
-    return <h2>{err.message}</h2>;
-  }
+  const setDataCB = useCallback(setData, [setData]);
+  useApp(setDataCB);
+
+  data && console.log("data", data);
+
+  // console.clear();
+
+  // if (isLoading) return <h2>Loading...</h2>;
+  // if (err && !isLoading) {
+  //   console.error(err);
+  //   return <h2>{err.message}</h2>;
+  // }
 
   const NewOrderProvider = () => (
     <OrderProvider>
@@ -28,21 +36,18 @@ function App() {
   );
 
   return (
-    isSS &&
-    !isLoading && (
-      <Layout>
-        <Box {...dragScrollEvents}>
-          <Routes>
-            <Route path="/" element={<NewOrderProvider />} />
-            <Route path="/NewOrder" element={<NewOrderProvider />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="/Customers" element={<Customers />} />
-            <Route path="/Settings" element={<Settings />} />
-            <Route path="/Login" element={<Login />} />
-          </Routes>
-        </Box>
-      </Layout>
-    )
+    <Layout>
+      <Box {...dragScrollEvents}>
+        <Routes>
+          <Route path="/" element={<NewOrderProvider />} />
+          <Route path="/NewOrder" element={<NewOrderProvider />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/Customers" element={<Customers />} />
+          <Route path="/Settings" element={<Settings />} />
+          <Route path="/Login" element={<Login />} />
+        </Routes>
+      </Box>
+    </Layout>
   );
 }
 

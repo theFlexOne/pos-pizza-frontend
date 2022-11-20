@@ -1,34 +1,29 @@
-import React from 'react';
-import CustomerLookup from './CustomerLookup';
-import CustomerFormName from './CustomerFormName';
-import CustomerFormAddress from './CustomerFormAddress';
-import {
-  useCustomer,
-  CustomerProvider,
-} from '../../../../context/CustomerContext';
-
-const FormPage = ({ goToMenu }) => {
-  const { actions } = useCustomer();
-  const { getFormStep, toNextPage, toPrevPage } = actions;
-
-  const formStep = getFormStep();
-
-  switch (formStep) {
-    case 1:
-      return <CustomerLookup goToMenu={goToMenu} nextPage={toNextPage} />;
-    case 2:
-      return <CustomerFormName nextPage={toNextPage} prevPage={toPrevPage} />;
-    case 3:
-      return <CustomerFormAddress prevPage={toPrevPage} />;
-    default:
-      return new Error('form page not found');
-  }
-};
+import React, { useState } from "react";
+import CustomerLookup from "./CustomerLookup";
+import CustomerFormName from "./CustomerFormName";
+import CustomerFormAddress from "./CustomerFormAddress";
+import { Box } from "@mui/system";
 
 export default function Customer({ goToMenu }) {
+  const [formStep, setFormStep] = useState(0);
+  const formSteps = [
+    <CustomerLookup goToMenu={goToMenu} />,
+    <CustomerFormName />,
+    <CustomerFormAddress />,
+  ];
+
+  const customerData = JSON.parse(sessionStorage.getItem("0"));
+  console.log("customerData", customerData);
+
+  function nextStep() {
+    setFormStep((prev) => (prev === formSteps.length - 1 ? 0 : prev + 1));
+  }
+  function prevStep() {
+    setFormStep((prev) => (prev === 0 ? formSteps.length - 1 : prev - 1));
+  }
   return (
-    <CustomerProvider>
-      <FormPage goToMenu={goToMenu} />
-    </CustomerProvider>
+    <Box component="form" id="customerForm">
+      {formSteps[formStep]}
+    </Box>
   );
 }

@@ -1,33 +1,40 @@
 import { Box, Button, Typography } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import CustomerTextField from "./CustomerTextField";
 import { useCustomer } from "../../../../context/CustomerContext";
 import useStyles from "../../../../hooks/useStyles";
+import NumPad from "../../../../components/NumPad";
 // import NumPad from '../../../../components/NumPad';
 
 export default function CustomerLookup({ goToMenu }) {
   const styles = useStyles().customerLookup;
-  const { actions } = useCustomer();
-  const { lookupCustomer, handleClearInput } = actions;
-  const inputRef = useRef();
 
-  const clearField = () => handleClearInput("phoneNumber");
-  const handleKeyDown = ({ key }) => key === "Enter" && lookupCustomer();
+  const [phoneInput, setPhoneInput] = useState("");
+
+  const handleCustomerLookup = (e) => {
+    e.preventDefault();
+    console.log("phoneInput", phoneInput);
+  };
 
   return (
     <Box sx={styles.page}>
       <Box sx={styles.formContainer}>
-        <Box sx={styles.form} onKeyDown={handleKeyDown}>
+        <Box
+          sx={styles.form}
+          component="form"
+          id="phoneInputForm"
+          onSubmit={handleCustomerLookup}
+        >
           <Typography variant="h5" component="h1" marginBottom="2rem">
             Please enter telephone number:
           </Typography>
           <Box sx={styles.inputWrapper}>
             <CustomerTextField
-              ref={inputRef}
               name="phoneNumber"
               label="Phone Number"
-              autoFocus
+              autoFocus={true}
+              value={phoneInput}
               // flow
             />
           </Box>
@@ -59,19 +66,18 @@ export default function CustomerLookup({ goToMenu }) {
           </Typography>
         </Box>
       </Box>
-      <Box sx={styles.keypadContainer}>
-        {/* <NumPad /> */}
-        <Button
-          onClick={() => lookupCustomer()}
-          variant="contained"
-          sx={{ mt: "auto" }}
-        >
+      <Box className="input-container" sx={styles.inputContainer}>
+        <NumPad setInput={setPhoneInput} />
+        <Button type="submit" variant="contained" form="phoneInputForm">
           LOOKUP TEL
-        </Button>
-        <Button variant="contained" onClick={clearField} sx={{ mb: "auto" }}>
-          CLEAR <ClearIcon sx={{ ml: "1rem" }} />
         </Button>
       </Box>
     </Box>
   );
 }
+
+// const { actions } = useCustomer();
+// const { lookupCustomer, handleClearInput } = actions;
+// const inputRef = useRef();
+// const clearField = () => handleClearInput("phoneNumber");
+// const handleKeyDown = ({ key }) => key === "Enter" && lookupCustomer();
