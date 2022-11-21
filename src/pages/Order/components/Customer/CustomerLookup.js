@@ -7,14 +7,17 @@ import useStyles from "../../../../hooks/useStyles";
 import NumPad from "../../../../components/NumPad";
 // import NumPad from '../../../../components/NumPad';
 
-export default function CustomerLookup({ goToMenu }) {
+export default function CustomerLookup({
+  navigateToMenu,
+  handleCustomerLookup,
+}) {
   const styles = useStyles().customerLookup;
 
   const [phoneInput, setPhoneInput] = useState("");
 
-  const handleCustomerLookup = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("phoneInput", phoneInput);
+    handleCustomerLookup(phoneInput);
   };
 
   return (
@@ -24,7 +27,7 @@ export default function CustomerLookup({ goToMenu }) {
           sx={styles.form}
           component="form"
           id="phoneInputForm"
-          onSubmit={handleCustomerLookup}
+          onSubmit={handleSubmit}
         >
           <Typography variant="h5" component="h1" marginBottom="2rem">
             Please enter telephone number:
@@ -38,7 +41,7 @@ export default function CustomerLookup({ goToMenu }) {
               // flow
             />
           </Box>
-          <Button variant="contained" onClick={goToMenu}>
+          <Button variant="contained" onClick={navigateToMenu}>
             SWITCH TO MENU
           </Button>
         </Box>

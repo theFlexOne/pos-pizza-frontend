@@ -1,50 +1,36 @@
-import { Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { Box } from "@mui/material";
-import NewOrder from "./pages/NewOrder/NewOrder";
 import Layout from "./components/Layout";
 import Customers from "./pages/Customers/Customers";
 import Settings from "./pages/Settings/Settings";
 import useDragScroll from "./hooks/useDragScroll";
-import { OrderProvider } from "./context/OrderContext";
 import Login from "./pages/Login/Login";
-import Test from "./Test";
+import Order from "./pages/Order/Order";
+import { useEffect, useMemo, useState } from "react";
 import useApp from "./hooks/useApp";
-import { useCallback, useState } from "react";
+import { UserProvider } from "./context/UserContext";
+import { useAppData } from "./context/AppDataContext";
 
 function App() {
-  const [data, setData] = useState(null);
-  const isSS = sessionStorage.length > 0;
   const dragScrollEvents = useDragScroll();
-
-  const setDataCB = useCallback(setData, [setData]);
-  useApp(setDataCB);
-
-  data && console.log("data", data);
-
-  // console.clear();
-
-  // if (isLoading) return <h2>Loading...</h2>;
-  // if (err && !isLoading) {
-  //   console.error(err);
-  //   return <h2>{err.message}</h2>;
-  // }
-
-  const NewOrderProvider = () => (
-    <OrderProvider>
-      <NewOrder />
-    </OrderProvider>
-  );
 
   return (
     <Layout>
       <Box {...dragScrollEvents}>
         <Routes>
-          <Route path="/" element={<NewOrderProvider />} />
-          <Route path="/NewOrder" element={<NewOrderProvider />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/Customers" element={<Customers />} />
-          <Route path="/Settings" element={<Settings />} />
-          <Route path="/Login" element={<Login />} />
+          <Route path="/">
+            <Route index element={<Navigate to="login" />} />
+            <Route path="order/*" element={<Order />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="login" element={<Login />} />
+          </Route>
         </Routes>
       </Box>
     </Layout>

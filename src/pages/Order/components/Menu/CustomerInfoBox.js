@@ -1,47 +1,45 @@
-import { Box, Button } from '@mui/material';
-import React from 'react';
-import Typography from '@mui/material/Typography';
-import { useOrder } from '../../../../context/OrderContext';
+import { Box, Button } from "@mui/material";
+import React from "react";
+import Typography from "@mui/material/Typography";
 
 const styles = {
   parent: {
-    flex: '.5',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '.25rem',
-    gap: '.25rem',
+    flex: ".5",
+    display: "flex",
+    flexDirection: "column",
+    padding: ".25rem",
+    gap: ".25rem",
   },
   infoBox: {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    borderRadius: '3px',
-    paddingLeft: '0.25rem',
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "rgba(255,255,255,0.25)",
+    borderRadius: "3px",
+    paddingLeft: "0.25rem",
   },
   label: {
-    color: '#ffffff',
-    fontWeight: 'bold',
-    marginRight: 'auto',
-    flex: '1',
+    color: "#ffffff",
+    fontWeight: "bold",
+    marginRight: "auto",
+    flex: "1",
   },
 };
 
 export default function CustomerInfoBox({ goToCustomer }) {
-  const { customer } = useOrder();
   let firstName, lastName, phoneNumber, streetAddress, secondaryAddress;
-  customer &&
-    ({
-      name: { firstName, lastName },
-      phoneNumber,
-      address: { streetAddress, secondaryAddress },
-    } = customer);
+  // customer &&
+  //   ({
+  //     name: { firstName, lastName },
+  //     phoneNumber,
+  //     address: { streetAddress, secondaryAddress },
+  //   } = customer);
   return (
     <Box sx={styles.parent}>
-      {customer ? (
+      {true ? (
         <Box sx={styles.infoBox}>
           <Box display="flex">
             <Typography variant="caption" sx={styles.label}>
-              {'NAME: '}
+              {"NAME: "}
             </Typography>
             <Typography variant="body2" component="p" className="name" flex="4">
               {`${firstName} ${lastName}`.toUpperCase()}
@@ -49,7 +47,7 @@ export default function CustomerInfoBox({ goToCustomer }) {
           </Box>
           <Box display="flex">
             <Typography variant="caption" sx={styles.label}>
-              {'TEL: '}
+              {"TEL: "}
             </Typography>
             <Typography variant="body2" component="p" className="name" flex="4">
               {phoneNumber}
@@ -57,10 +55,10 @@ export default function CustomerInfoBox({ goToCustomer }) {
           </Box>
           <Box display="flex">
             <Typography variant="caption" sx={styles.label}>
-              {'ADR: '}
+              {"ADR: "}
             </Typography>
             <Typography variant="body2" component="p" className="name" flex="4">
-              {(streetAddress + ', ' + secondaryAddress).toUpperCase()}
+              {(streetAddress + ", " + secondaryAddress).toUpperCase()}
             </Typography>
           </Box>
         </Box>
@@ -81,9 +79,9 @@ export default function CustomerInfoBox({ goToCustomer }) {
           color="primary"
           onClick={goToCustomer}
           fullWidth
-          sx={{ fontSize: 'smaller' }}
+          sx={{ fontSize: "smaller" }}
         >
-          {customer ? 'RESET' : 'ADD CUSTOMER'}
+          {/* {customer ? "RESET" : "ADD CUSTOMER"} */}
         </Button>
       </Box>
     </Box>

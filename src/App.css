@@ -1,3 +1,7 @@
 input.active {
   outline: 2px solid hotpink;
 }
+
+div {
+  color: hsl(124, 97%, 23%);
+}

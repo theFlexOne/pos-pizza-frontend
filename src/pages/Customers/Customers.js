@@ -15,9 +15,8 @@ import FilterModal from "./components/FilterModal";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { deleteCustomer } from "../../utils/fetchHelpers";
-import { formatForDisplay } from "../../utils/formatPhoneNumber";
 import useStyles from "../../hooks/useStyles";
-import constants from "../../constants/constants";
+import { APP_DATA_URL } from "../../constants/constants";
 
 const ROWS_PER_PAGE = 8;
 const INITIAL_FILTER = { value: "", type: undefined };
@@ -118,7 +117,7 @@ export default function Customers(props) {
   useEffect(() => {
     const ssData = JSON.parse(sessionStorage.getItem("customers"));
     if (ssData !== null) return setCustomerList(ssData);
-    fetch(constants.APP_DATA_URL + "/customers")
+    fetch(APP_DATA_URL + "/customers")
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();

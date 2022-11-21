@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import { useTheme } from "@emotion/react";
 import CartItem from "./CartItem";
 import { toMoneyString } from "../../../../utils/textMods";
-import { useOrder } from "../../../../context/OrderContext";
 import useStyles from "../../../../hooks/useStyles";
 
 const SALES_TAX = 0.07;
@@ -45,20 +44,19 @@ const CartTotal = ({ subtotal }) => {
 
 export default function Cart(props) {
   const [subtotal, setSubtotal] = useState(0);
-  const { cart, removeFromCart } = useOrder();
 
   const styles = useStyles().cart;
 
-  useEffect(() => {
-    const orderSum = cart.reduce((sum, item) => {
-      return sum + item.price;
-    }, 0.0);
-    setSubtotal(orderSum);
-  }, [cart]);
+  // useEffect(() => {
+  //   const orderSum = cart.reduce((sum, item) => {
+  //     return sum + item.price;
+  //   }, 0.0);
+  //   setSubtotal(orderSum);
+  // }, [cart]);
 
   return (
     <Box sx={styles.container}>
-      <Box sx={styles.list}>
+      {/* <Box sx={styles.list}>
         {cart &&
           cart.map((item, i) => {
             return (
@@ -70,7 +68,7 @@ export default function Cart(props) {
             );
           })}
         <CartTotal subtotal={subtotal} />
-      </Box>
+      </Box> */}
       <Box margin=".25rem .5rem" display="flex" justifyContent="center">
         <Button
           type="submit"

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Box } from '@mui/system';
-import { useTheme } from '@mui/material/styles';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { Box } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 
 export default function TopBar() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -14,7 +14,7 @@ export default function TopBar() {
     // e.preventDefault();
   };
 
-  const LinkTab = props => {
+  const LinkTab = (props) => {
     return (
       <Tab
         component={Link}
@@ -38,13 +38,13 @@ export default function TopBar() {
         variant="fullWidth"
         value={selectedTab}
         onChange={handleChange}
-        TabIndicatorProps={{ width: '1rem' }}
+        TabIndicatorProps={{ width: "1rem" }}
       >
-        <LinkTab label="New Order" to="/NewOrder" />
-        <LinkTab label="Order History" to="/OrderHistory" disabled />
-        <LinkTab label="Customers" to="/Customers" />
-        <LinkTab label="Settings" to="/Settings" />
-        <LinkTab label="Reports" to="/Reports" disabled />
+        <LinkTab label="Order" to="/order" />
+        <LinkTab label="Order History" to="/orderhistory" disabled />
+        <LinkTab label="Customers" to="/customers" />
+        <LinkTab label="Settings" to="/settings" />
+        <LinkTab label="Reports" to="/reports" disabled />
         <LinkTab label="Custom 1" disabled />
       </Tabs>
     </Box>

@@ -1,4 +1,3 @@
-import constants from "../constants/constants";
 // const fetchAppData = async () => {
 //   try {
 //     const res = await fetch(constants.APP_DATA_URL + "/db");
@@ -11,6 +10,8 @@ import constants from "../constants/constants";
 //   }
 // };
 
+import { APP_DATA_URL } from "../constants/constants";
+
 const postNewCustomer = async (customer) => {
   const options = {
     method: "POST",
@@ -18,7 +19,7 @@ const postNewCustomer = async (customer) => {
     body: JSON.stringify(customer),
   };
   try {
-    const res = await fetch(constants.APP_DATA_URL + "/customers", options);
+    const res = await fetch(APP_DATA_URL + "/customers", options);
     if (!res.ok) return console.error(res.status, res.statusText);
     const newCustomer = await res.json();
     return newCustomer;
@@ -29,7 +30,7 @@ const postNewCustomer = async (customer) => {
 };
 
 const deleteCustomer = (id) => {
-  fetch(constants.APP_DATA_URL + `/customers/${id}`, { method: "DELETE" })
+  fetch(APP_DATA_URL + `/customers/${id}`, { method: "DELETE" })
     .then((res) => {
       if (!res.ok) return console.error(res.status, res.statusText);
       console.log(`deleted customer with id: ${id}`);
@@ -43,7 +44,7 @@ const postNewOrder = async (order) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(order),
   };
-  const res = await fetch(constants.APP_DATA_URL + "/orderHistory", options);
+  const res = await fetch(APP_DATA_URL + "/orderHistory", options);
   const newCustomer = await res.json();
   return newCustomer;
 };

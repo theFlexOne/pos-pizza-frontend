@@ -1,57 +1,80 @@
+import axios from "axios";
+import { useMemo } from "react";
 import { useState, useEffect } from "react";
-import constants from "../constants/constants";
+import { APP_DATA_URL } from "../constants/constants";
 
-const initialDataRoutes = ["menu", "customers"];
+const emptyQueryObj = { data: [], error: false, isLoading: false };
 
-const populateSessionStorage = (data) => {
-  console.log("data", data);
-  Object.keys(data).forEach((section) => {
-    sessionStorage.setItem(section, JSON.stringify(data[section]));
-  });
-};
+const useApp = (baseURL = APP_DATA_URL) => {
+  const [query, setQuery] = useState(emptyQueryObj);
 
-const useApp = async (setData) => {
-  const [results, setResults] = useState(null);
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchJSONServerData = async (...sections) => {
-    setIsLoading(true);
-    const fetches = sections.map((section) => {
-      const url = `${constants.APP_DATA_URL}/${section}`;
-      return fetch(url).then((res) => res.json());
-    });
-    Promise.all(fetches).then(setData);
-  };
-
-  const fetchMongoDBData = async (collection = "recipes") => {
-    setIsLoading(true);
-    const ssData = JSON.parse(sessionStorage.getItem(collection));
-    if (ssData) {
-      setResults(ssData);
-      setIsLoading(false);
-      return;
-    }
+  async function fetchData(route) {
+    setQuery({ ...query, isLoading: true });
+    const url = `${baseURL}/${route}`;
     try {
-      const res = await fetch(constants.APP_DATA_URL + "/recipes");
-      if (!res.ok) throw new Error(res.statusText);
-      const recipes = Object.fromEntries([await res.json()]);
-      setResults(recipes);
+      const res = await axios.get(url);
+      console.log("res", res);
+      // check for errors here
+      const { data } = res;
+      setQuery({ ...query, data: [...data], isLoading: false });
     } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
+      console.error(err.message);
+      setQuery({ ...query, error: err, isLoading: false });
     }
-  };
+  }
 
-  useEffect(() => {
-    sessionStorage.clear();
-    fetchJSONServerData(...initialDataRoutes).then(setData);
-  }, [setData]);
-
-  results && console.log("results", results);
-  results && populateSessionStorage(results);
-  return [results, error, isLoading];
+  return query;
 };
 
 export default useApp;
+
+// useEffect(() => {
+//   setIsLoading(true);
+//   if (!Array.isArray(routes)) {
+//     axios
+//       .get(`${APP_DATA_URL}/${routes}`)
+//       .then((res) => setData([{ route: routes, data: res.data }]))
+//       .catch((err) => {
+//         console.error(err.message);
+//         setError(err);
+//       })
+//       .finally(() => setIsLoading(false));
+//   } else {
+//     const fetchRequests = routes.map((r) =>
+//       axios
+//         .get(`${APP_DATA_URL}/${r}`)
+//         .then((res) => ({ route: r, data: res.data }))
+//         .catch(console.error)
+//     );
+//     Promise.all(fetchRequests)
+//       .then((data) => {
+//         console.log("data", data);
+//         // setData(data);
+//       })
+//       .catch((err) => {
+//         console.error(err.message);
+//         setError(err);
+//       })
+//       .finally(() => setIsLoading(false));
+//   }
+// }, [routes]);
+
+// const fetchMongoDBData = async (collection = "recipes") => {
+//   setIsLoading(true);
+//   const ssData = JSON.parse(sessionStorage.getItem(collection));
+//   if (ssData) {
+//     setResults(ssData);
+//     setIsLoading(false);
+//     return;
+//   }
+//   try {
+//     const res = await fetch(constants.APP_DATA_URL + "/recipes");
+//     if (!res.ok) throw new Error(res.statusText);
+//     const recipes = Object.fromEntries([await res.json()]);
+//     setResults(recipes);
+//   } catch (err) {
+//     setError(err);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
